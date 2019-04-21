@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Items</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<table>
+    <thead>
+    <tr>
+        <th> #</th>
+        <th> id</th>
+        <th> name</th>
+        <th> status</th>
+        <th> update</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <th:block th:each="item,number : ${items}">
+        <tr>
+            <form action="#" th:action="@{/update}" th:object="${updatedItem}" method="post">
+                <td th:text="${number.count}"></td>
+                <td th:text="${item.id}">...</td>
+                <td th:text="${item.name}">...</td>
+                <td th:text="${item.status}">...</td>
+                <td>status:</td>
+                <td>
+                    <select th:hidden="true" th:field="${updatedItem.id}">
+                        <option th:value="${item.id}"></option>
+                    </select>
+                    <select th:field="${updatedItem.status}">
+                        <option th:value="${item.status}" th:text="${item.status}"
+                                th:selected="${item.status}"></option>
+                        <th:block th:each="status:${enumStatus}">
+                            <option th:value="${status}" th:text="${status}"></option>
+                        </th:block>
+                    </select>
+                    <button type="submit">update</button>
+            </form>
+            </td>
+        </tr>
+    </th:block>
+    </tbody>
+</table>
+<a th:href="@{/item}">add item</a>
+</body>
+</html>

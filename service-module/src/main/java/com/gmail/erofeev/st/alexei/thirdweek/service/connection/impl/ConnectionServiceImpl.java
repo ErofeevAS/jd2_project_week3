@@ -1,0 +1,85 @@
+package com.gmail.erofeev.st.alexei.thirdweek.service.connection.impl;
+
+import com.gmail.erofeev.st.alexei.thirdweek.repository.DataBaseInitRepository;
+import com.gmail.erofeev.st.alexei.thirdweek.service.SQLFileReaderService;
+import com.gmail.erofeev.st.alexei.thirdweek.service.connection.ConnectionService;
+import com.gmail.erofeev.st.alexei.thirdweek.service.connection.exception.DataBaseConnectionException;
+import com.gmail.erofeev.st.alexei.thirdweek.service.exception.ServiceException;
+import com.gmail.erofeev.st.alexei.thirdweek.service.properties.DataBaseProperties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Properties;
+
+@Component
+public class ConnectionServiceImpl implements ConnectionService {
+    private static final Logger logger = LoggerFactory.getLogger(ConnectionServiceImpl.class);
+    private final DataBaseProperties dataBaseProperties;
+    private final SQLFileReaderService sqlFileReaderService;
+    private final DataBaseInitRepository dataBaseInitRepository;
+
+
+    @Autowired
+    public ConnectionServiceImpl(DataBaseProperties databaseProperties, SQLFileReaderService sqlFileReaderService, DataBaseInitRepository dataBaseInitRepository) {
+        this.sqlFileReaderService = sqlFileReaderService;
+        this.dataBaseInitRepository = dataBaseInitRepository;
+        try {
+            Class.forName(databaseProperties.getDriver());
+        } catch (ClassNotFoundException e) {
+            logger.error(e.getMessage(), e);
+            throw new DataBaseConnectionException("jdbc driver not found: " + e.getMessage());
+        }
+        this.dataBaseProperties = databaseProperties;
+    }
+
+    @PostConstruct
+    private void createDataBaseTable() {
+        logger.debug("initialization tables in the database... ");
+        try (Connection connection = getConnection()) {
+            String fileName = dataBaseProperties.getInitDataBaseFileName();
+            File file = new ClassPathResource(fileName).getFile();
+            String[] queries = sqlFileReaderService.getQueryFromFile(file);
+            connection.setAutoCommit(false);
+            try {
+                dataBaseInitRepository.init(connection, queries);
+                connection.commit();
+            } catch (SQLException e) {
+                logger.error(e.getMessage());
+                throw new ServiceException(e.getMessage(), e);
+            }
+        } catch (SQLException e) {
+            String message = "Connection to database can't be established";
+            throw new ServiceException(message, e);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        logger.debug("initialization tables in the database was successful ");
+    }
+
+    @Override
+    public Connection getConnection() {
+        logger.debug("getting a connection to a database...");
+        Properties properties = new Properties();
+        String dataBaseUrl = dataBaseProperties.getUrl();
+        properties.setProperty("user", dataBaseProperties.getUsername());
+        properties.setProperty("password", dataBaseProperties.getPassword());
+        try {
+            Connection connection = DriverManager.getConnection(dataBaseUrl, properties);
+            logger.debug("connection was established");
+            return connection;
+        } catch (SQLException e) {
+            String message = "Can't connect to dataBase " + e.getMessage();
+            logger.error(message);
+            throw new DataBaseConnectionException(e.getMessage(), e);
+        }
+    }
+}
