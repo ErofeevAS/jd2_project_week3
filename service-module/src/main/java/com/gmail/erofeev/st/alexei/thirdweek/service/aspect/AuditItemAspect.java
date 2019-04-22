@@ -1,6 +1,6 @@
 package com.gmail.erofeev.st.alexei.thirdweek.service.aspect;
 
-import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.Status;
+import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.ItemStatus;
 import com.gmail.erofeev.st.alexei.thirdweek.repository.model.audit.AuditItem;
 import com.gmail.erofeev.st.alexei.thirdweek.service.AuditItemService;
 import org.aspectj.lang.JoinPoint;
@@ -33,15 +33,16 @@ public class AuditItemAspect {
 
     @AfterReturning("getNamePointcut()")
     public void auditAdvice(JoinPoint joinPoint) {
-        logger.debug("audit start");
+        Long item_id = (Long) joinPoint.getArgs()[1];
+        logger.debug("audit for item with id: " + item_id + "was started");
         Object[] args = joinPoint.getArgs();
         Connection connection = (Connection) args[0];
         Long itemId = (Long) args[1];
-        Status status = (Status) args[2];
+        ItemStatus itemStatus = (ItemStatus) args[2];
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date.getTime());
-        AuditItem auditItem = new AuditItem(itemId, status, timestamp);
+        AuditItem auditItem = new AuditItem(itemId, itemStatus, timestamp);
         auditItemService.save(connection, auditItem);
-        logger.debug("audit stopped");
+        logger.debug("audit for item with id: " + item_id + " was stopped");
     }
 }

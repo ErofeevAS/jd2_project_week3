@@ -1,7 +1,7 @@
 package com.gmail.erofeev.st.alexei.thirdweek.repository.impl;
 
 import com.gmail.erofeev.st.alexei.thirdweek.repository.ItemRepository;
-import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.Status;
+import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.ItemStatus;
 import com.gmail.erofeev.st.alexei.thirdweek.repository.exception.DataBaseException;
 import com.gmail.erofeev.st.alexei.thirdweek.repository.model.Item;
 import org.slf4j.Logger;
@@ -23,7 +23,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     @Override
     public Item add(Connection connection, Item item) {
         String name = item.getName();
-        String status = item.getStatus().name();
+        String status = item.getItemStatus().name();
         String sql = "INSERT INTO items (name,status) values(?,?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, name);
@@ -42,23 +42,22 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public Integer update(Connection connection, Long id, Status status) {
+    public Integer update(Connection connection, Long id, ItemStatus itemStatus) {
         String query = "UPDATE  items SET status=? WHERE id=?;";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setString(1, status.name());
+            ps.setString(1, itemStatus.name());
             ps.setLong(2, id);
             return ps.executeUpdate();
         } catch (SQLException e) {
-            String message = "Can't update status for item. id: " + id;
+            String message = "Can't update itemStatus for item. id: " + id;
             logger.error(message);
             throw new DataBaseException(message, e);
         }
     }
 
     @Override
-    public List<Item> getItems(Connection connection, int page, int amount) {
+    public List<Item> getItems(Connection connection, int offset, int amount) {
         List<Item> items = new ArrayList<>();
-        int offset = (page - 1) * amount;
         String query = "SELECT * FROM ITEMS WHERE deleted = false LIMIT ?,? ";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, offset);
@@ -80,7 +79,7 @@ public class ItemRepositoryImpl implements ItemRepository {
         Long id = resultSet.getLong("id");
         String name = resultSet.getString("name");
         String status = resultSet.getString("status");
-        Status statusEum = Status.valueOf(status);
-        return new Item(id, name, statusEum);
+        ItemStatus itemStatusEum = ItemStatus.valueOf(status);
+        return new Item(id, name, itemStatusEum);
     }
 }

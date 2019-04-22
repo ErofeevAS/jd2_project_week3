@@ -28,6 +28,7 @@
         <java.version>1.8</java.version>
         <mysql-connector.version>8.0.15</mysql-connector.version>
         <bootstrap.version>4.2.1</bootstrap.version>
+        <start-class>com.gmail.erofeev.st.alexei.thirdweek.controller.app.SpringBootModuleApplication</start-class>
     </properties>
 
     <description>spring-boot-module</description>
@@ -60,7 +61,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
-        </dependency>        
+        </dependency>
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -94,4 +95,5 @@
             <version>${bootstrap.version}</version>
         </dependency>
     </dependencies>
+
 </project>

@@ -1,6 +1,6 @@
 package com.gmail.erofeev.st.alexei.thirdweek.service.converter.impl;
 
-import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.Status;
+import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.ItemStatus;
 import com.gmail.erofeev.st.alexei.thirdweek.repository.model.Item;
 import com.gmail.erofeev.st.alexei.thirdweek.service.converter.ItemConverter;
 import com.gmail.erofeev.st.alexei.thirdweek.service.model.ItemDTO;
@@ -15,16 +15,16 @@ public class ItemConverterImpl implements ItemConverter {
     public ItemDTO toDTO(Item item) {
         Long id = item.getId();
         String name = item.getName();
-        Status status = item.getStatus();
-        return new ItemDTO(id, name, status);
+        ItemStatus itemStatus = item.getItemStatus();
+        return new ItemDTO(id, name, itemStatus);
     }
 
     @Override
     public Item toItem(ItemDTO itemDTO) {
         Long id = itemDTO.getId();
         String name = itemDTO.getName();
-        Status status = itemDTO.getStatus();
-        return new Item(id, name, status);
+        ItemStatus itemStatus = itemDTO.getItemStatus();
+        return new Item(id, name, itemStatus);
     }
 
     @Override

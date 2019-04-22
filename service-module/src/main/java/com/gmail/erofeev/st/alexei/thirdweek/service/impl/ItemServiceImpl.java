@@ -1,7 +1,7 @@
 package com.gmail.erofeev.st.alexei.thirdweek.service.impl;
 
 import com.gmail.erofeev.st.alexei.thirdweek.repository.ItemRepository;
-import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.Status;
+import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.ItemStatus;
 import com.gmail.erofeev.st.alexei.thirdweek.repository.model.Item;
 import com.gmail.erofeev.st.alexei.thirdweek.service.ItemService;
 import com.gmail.erofeev.st.alexei.thirdweek.service.connection.ConnectionService;
@@ -24,6 +24,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final ConnectionService connectionService;
     private final ItemConverter itemConverter;
+    private static final int MAX_AMOUNT_OF_UPDATE = 1;
 
     @Autowired
     public ItemServiceImpl(ItemRepository itemRepository, ConnectionService connectionService, ItemConverter itemConverter) {
@@ -39,8 +40,9 @@ public class ItemServiceImpl implements ItemService {
                 connection.setAutoCommit(false);
                 Item item = itemConverter.toItem(itemDTO);
                 itemRepository.add(connection, item);
+                ItemDTO savedItem = itemConverter.toDTO(item);
                 connection.commit();
-                return itemConverter.toDTO(item);
+                return savedItem;
             } catch (SQLException e) {
                 connection.rollback();
                 logger.error("Can't add item with id: {}", itemDTO.getId());
@@ -53,12 +55,12 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public void update(Long id, Status status) {
+    public void update(Long id, ItemStatus itemStatus) {
         try (Connection connection = connectionService.getConnection()) {
             try {
                 connection.setAutoCommit(false);
-                Integer amountOfChanges = itemRepository.update(connection, id, status);
-                if (amountOfChanges > 1) {
+                Integer amountOfChanges = itemRepository.update(connection, id, itemStatus);
+                if (amountOfChanges > MAX_AMOUNT_OF_UPDATE) {
                     logger.error("Can't update. Too many items with id:{}", id);
                     throw new WrongNumberOfReturnValuesException();
                 }
@@ -80,7 +82,8 @@ public class ItemServiceImpl implements ItemService {
         try (Connection connection = connectionService.getConnection()) {
             try {
                 connection.setAutoCommit(false);
-                List<Item> items = itemRepository.getItems(connection, page, amount);
+                int offset = (page - 1) * amount;
+                List<Item> items = itemRepository.getItems(connection, offset, amount);
                 itemsDTO = itemConverter.toDTOs(items);
                 connection.commit();
                 return itemsDTO;

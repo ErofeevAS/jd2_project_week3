@@ -9,10 +9,13 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
+    <properties>
+        <spring-boot-module.version>1.0-SNAPSHOT</spring-boot-module.version>
+    </properties>
+
     <groupId>com.gmail.erofeev.st.alexei.thirdweek</groupId>
     <artifactId>spring-boot-module</artifactId>
-    <version>1.0-SNAPSHOT</version>
-
+    <version>${spring-boot-module.version>}</version>
 
     <dependencies>
         <dependency>
@@ -25,6 +28,19 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>com.gmail.erofeev.st.alexei.thirdweek.controller.app.SpringBootModuleApplication
+                    </mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 
 </project>

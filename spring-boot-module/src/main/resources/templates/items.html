@@ -11,7 +11,7 @@
         <th> #</th>
         <th> id</th>
         <th> name</th>
-        <th> status</th>
+        <th> itemStatus</th>
         <th> update</th>
 
     </tr>
@@ -23,17 +23,17 @@
                 <td th:text="${number.count}"></td>
                 <td th:text="${item.id}">...</td>
                 <td th:text="${item.name}">...</td>
-                <td th:text="${item.status}">...</td>
-                <td>status:</td>
+                <td th:text="${item.itemStatus}">...</td>
+                <td>itemStatus:</td>
                 <td>
                     <select th:hidden="true" th:field="${updatedItem.id}">
                         <option th:value="${item.id}"></option>
                     </select>
-                    <select th:field="${updatedItem.status}">
-                        <option th:value="${item.status}" th:text="${item.status}"
-                                th:selected="${item.status}"></option>
-                        <th:block th:each="status:${enumStatus}">
-                            <option th:value="${status}" th:text="${status}"></option>
+                    <select th:field="${updatedItem.itemStatus}">
+                        <option th:value="${item.itemStatus}" th:text="${item.itemStatus}"
+                                th:selected="${item.itemStatus}"></option>
+                        <th:block th:each="itemStatus:${enumStatus}">
+                            <option th:value="${itemStatus}" th:text="${itemStatus}"></option>
                         </th:block>
                     </select>
                     <button type="submit">update</button>

@@ -3,7 +3,7 @@ package com.gmail.erofeev.st.alexei.thirdweek.contoller;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gmail.erofeev.st.alexei.thirdweek.controller.app.SpringBootModuleApplication;
 import com.gmail.erofeev.st.alexei.thirdweek.controller.impl.ItemController;
-import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.Status;
+import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.ItemStatus;
 import com.gmail.erofeev.st.alexei.thirdweek.service.ItemService;
 import com.gmail.erofeev.st.alexei.thirdweek.service.model.ItemDTO;
 import org.junit.Before;
@@ -44,8 +44,8 @@ public class ItemControllerIntegrationTest {
     private ItemService itemService;
 
     private List<ItemDTO> items = asList(
-            new ItemDTO(1L, "pen", Status.COMPLETED),
-            new ItemDTO(2L, "apple", Status.READY));
+            new ItemDTO(1L, "pen", ItemStatus.COMPLETED),
+            new ItemDTO(2L, "apple", ItemStatus.READY));
 
     @Before
     public void init() {

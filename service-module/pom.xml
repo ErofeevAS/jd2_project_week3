@@ -8,13 +8,15 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>com.gmail.erofeev.st.alexei.thirdweek</groupId>
-    <artifactId>service-module</artifactId>
-    <version>1.0-SNAPSHOT</version>
-
     <properties>
+        <service-module.version>1.0-SNAPSHOT</service-module.version>
+        <mavem-jar-plugin.version>3.0.2</mavem-jar-plugin.version>
         <mysql-connector.version>8.0.15</mysql-connector.version>
     </properties>
+
+    <groupId>com.gmail.erofeev.st.alexei.thirdweek</groupId>
+    <artifactId>service-module</artifactId>
+    <version>${service-module.version}</version>
 
     <dependencies>
         <dependency>
@@ -35,7 +37,7 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.0.2</version>
+                    <version>${mavem-jar-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

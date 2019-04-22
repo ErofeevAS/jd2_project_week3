@@ -1,6 +1,6 @@
 package com.gmail.erofeev.st.alexei.thirdweek.controller.impl;
 
-import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.Status;
+import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.ItemStatus;
 import com.gmail.erofeev.st.alexei.thirdweek.service.ItemService;
 import com.gmail.erofeev.st.alexei.thirdweek.service.model.ItemDTO;
 import org.slf4j.Logger;
@@ -15,16 +15,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.validation.Valid;
 import java.util.List;
 
-import static com.gmail.erofeev.st.alexei.thirdweek.repository.enums.Status.COMPLETED;
-import static com.gmail.erofeev.st.alexei.thirdweek.repository.enums.Status.READY;
 import static java.util.Arrays.asList;
-
 
 @Controller
 public class ItemController {
     private static final Logger logger = LoggerFactory.getLogger(ItemController.class);
     private final ItemService itemService;
-    private final List<Status> enumStatus = asList(COMPLETED, READY);
+    private final List<ItemStatus> enumItemStatuses = asList(ItemStatus.values());
 
     @Autowired
     public ItemController(ItemService itemService) {
@@ -61,15 +58,15 @@ public class ItemController {
         ItemDTO updatedItem = new ItemDTO();
         model.addAttribute("items", items);
         model.addAttribute("updatedItem", updatedItem);
-        model.addAttribute("enumStatus", enumStatus);
+        model.addAttribute("enumStatus", enumItemStatuses);
         return "items";
     }
 
     @PostMapping("/update")
     public String update(ItemDTO itemDTO) {
         Long id = itemDTO.getId();
-        Status status = itemDTO.getStatus();
-        itemService.update(id, status);
+        ItemStatus itemStatus = itemDTO.getItemStatus();
+        itemService.update(id, itemStatus);
         return "redirect:/items";
     }
 

@@ -11,8 +11,8 @@
             <td th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Name Error</td>
         </tr>
         <tr>
-            <td>status:</td>
-            <td><select th:field="*{status}">
+            <td>itemStatus:</td>
+            <td><select th:field="*{itemStatus}">
                 <option th:value="'READY'" th:text="READY"></option>
                 <option th:value="'COMPLETED'" th:text="COMPLETED"></option>
             </select></td>

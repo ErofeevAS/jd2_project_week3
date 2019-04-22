@@ -1,9 +1,8 @@
 package com.gmail.erofeev.st.alexei.thirdweek.contoller;
 
 import com.gmail.erofeev.st.alexei.thirdweek.controller.impl.ItemController;
-import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.Status;
+import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.ItemStatus;
 import com.gmail.erofeev.st.alexei.thirdweek.service.ItemService;
-import com.gmail.erofeev.st.alexei.thirdweek.service.ItemServiceIntegrationTest;
 import com.gmail.erofeev.st.alexei.thirdweek.service.model.ItemDTO;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,17 +29,15 @@ public class ItemControllerTest {
 
     @Mock
     private ItemService itemService;
-
     private ItemController controller;
     private MockMvc mockMvc;
 
     private List<ItemDTO> items = asList(
-            new ItemDTO(1L, "pen", Status.COMPLETED),
-            new ItemDTO(2L, "apple", Status.READY));
+            new ItemDTO(1L, "pen", ItemStatus.COMPLETED),
+            new ItemDTO(2L, "apple", ItemStatus.READY));
 
     @Before
     public void init() {
-
         controller = new ItemController(itemService);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         when(itemService.getItems(1, 10)).thenReturn(items);
@@ -92,6 +89,4 @@ public class ItemControllerTest {
                 .post("/update"))
                 .andExpect(status().isFound());
     }
-
-
 }

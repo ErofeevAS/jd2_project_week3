@@ -1,21 +1,21 @@
 package com.gmail.erofeev.st.alexei.thirdweek.repository.model;
 
-import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.Status;
+import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.ItemStatus;
 
 public class Item {
     private Long id;
     private String name;
-    private Status status;
+    private ItemStatus itemStatus;
 
-    public Item(String name, Status status) {
+    public Item(String name, ItemStatus itemStatus) {
         this.name = name;
-        this.status = status;
+        this.itemStatus = itemStatus;
     }
 
-    public Item(Long id, String name, Status status) {
+    public Item(Long id, String name, ItemStatus itemStatus) {
         this.id = id;
         this.name = name;
-        this.status = status;
+        this.itemStatus = itemStatus;
     }
 
     public Long getId() {
@@ -34,11 +34,11 @@ public class Item {
         this.name = name;
     }
 
-    public Status getStatus() {
-        return status;
+    public ItemStatus getItemStatus() {
+        return itemStatus;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setItemStatus(ItemStatus itemStatus) {
+        this.itemStatus = itemStatus;
     }
 }

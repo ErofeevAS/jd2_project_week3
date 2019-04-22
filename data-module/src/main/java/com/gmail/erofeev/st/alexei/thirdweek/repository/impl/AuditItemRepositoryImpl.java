@@ -1,7 +1,7 @@
 package com.gmail.erofeev.st.alexei.thirdweek.repository.impl;
 
 import com.gmail.erofeev.st.alexei.thirdweek.repository.AuditItemRepository;
-import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.Status;
+import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.ItemStatus;
 import com.gmail.erofeev.st.alexei.thirdweek.repository.exception.DataBaseException;
 import com.gmail.erofeev.st.alexei.thirdweek.repository.model.audit.AuditItem;
 import org.slf4j.Logger;
@@ -22,7 +22,7 @@ public class AuditItemRepositoryImpl implements AuditItemRepository {
     @Override
     public AuditItem save(Connection connection, AuditItem auditItem) {
         Long itemId = auditItem.getItemId();
-        Status action = auditItem.getAction();
+        ItemStatus action = auditItem.getAction();
         Timestamp date = auditItem.getDate();
         String sql = "INSERT INTO audititem (item_id,action,date) values(?,?,?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {

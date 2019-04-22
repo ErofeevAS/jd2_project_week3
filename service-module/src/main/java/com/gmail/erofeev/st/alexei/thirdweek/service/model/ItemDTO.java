@@ -1,6 +1,6 @@
 package com.gmail.erofeev.st.alexei.thirdweek.service.model;
 
-import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.Status;
+import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.ItemStatus;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -12,20 +12,21 @@ public class ItemDTO {
     @NotNull
     @Size(max = 40)
     private String name;
-    private Status status;
+    @NotNull
+    private ItemStatus itemStatus;
 
     public ItemDTO() {
     }
 
-    public ItemDTO(Long id, String name, Status status) {
+    public ItemDTO(Long id, String name, ItemStatus itemStatus) {
         this.id = id;
         this.name = name;
-        this.status = status;
+        this.itemStatus = itemStatus;
     }
 
-    public ItemDTO(String name, Status status) {
+    public ItemDTO(String name, ItemStatus itemStatus) {
         this.name = name;
-        this.status = status;
+        this.itemStatus = itemStatus;
     }
 
     public Long getId() {
@@ -44,12 +45,12 @@ public class ItemDTO {
         this.name = name;
     }
 
-    public Status getStatus() {
-        return status;
+    public ItemStatus getItemStatus() {
+        return itemStatus;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setItemStatus(ItemStatus itemStatus) {
+        this.itemStatus = itemStatus;
     }
 
 }

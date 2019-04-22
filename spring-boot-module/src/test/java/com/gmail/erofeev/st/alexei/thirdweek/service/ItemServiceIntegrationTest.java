@@ -3,7 +3,7 @@ package com.gmail.erofeev.st.alexei.thirdweek.service;
 import com.gmail.erofeev.st.alexei.thirdweek.controller.app.SpringBootModuleApplication;
 import com.gmail.erofeev.st.alexei.thirdweek.controller.impl.ItemController;
 import com.gmail.erofeev.st.alexei.thirdweek.repository.DataBaseInitRepository;
-import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.Status;
+import com.gmail.erofeev.st.alexei.thirdweek.repository.enums.ItemStatus;
 import com.gmail.erofeev.st.alexei.thirdweek.service.connection.ConnectionService;
 import com.gmail.erofeev.st.alexei.thirdweek.service.model.ItemDTO;
 import org.junit.Assert;
@@ -67,7 +67,7 @@ public class ItemServiceIntegrationTest {
 
     @Test
     public void shouldReturnItemWIthId() {
-        ItemDTO itemDTO = new ItemDTO("test_item", Status.READY);
+        ItemDTO itemDTO = new ItemDTO("test_item", ItemStatus.READY);
         itemDTO = itemService.add(itemDTO);
         Assert.assertNotNull(itemDTO.getId());
     }
@@ -80,13 +80,13 @@ public class ItemServiceIntegrationTest {
 
     @Test
     public void shouldReturnItemWithReadyStatus() {
-        itemService.update(1L, Status.READY);
-        itemService.update(2L, Status.READY);
-        itemService.update(3L, Status.READY);
+        itemService.update(1L, ItemStatus.READY);
+        itemService.update(2L, ItemStatus.READY);
+        itemService.update(3L, ItemStatus.READY);
         List<ItemDTO> items = itemService.getItems(1, 10);
         boolean isCorrectStatus = true;
         for (ItemDTO item : items) {
-            if (!item.getStatus().equals(Status.READY)) {
+            if (!item.getItemStatus().equals(ItemStatus.READY)) {
                 isCorrectStatus = false;
                 break;
             }

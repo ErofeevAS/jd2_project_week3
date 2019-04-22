@@ -27,7 +27,6 @@ public class ConnectionServiceImpl implements ConnectionService {
     private final SQLFileReaderService sqlFileReaderService;
     private final DataBaseInitRepository dataBaseInitRepository;
 
-
     @Autowired
     public ConnectionServiceImpl(DataBaseProperties databaseProperties, SQLFileReaderService sqlFileReaderService, DataBaseInitRepository dataBaseInitRepository) {
         this.sqlFileReaderService = sqlFileReaderService;
@@ -44,8 +43,8 @@ public class ConnectionServiceImpl implements ConnectionService {
     @PostConstruct
     private void createDataBaseTable() {
         logger.debug("initialization tables in the database... ");
+        String fileName = dataBaseProperties.getInitDataBaseFileName();
         try (Connection connection = getConnection()) {
-            String fileName = dataBaseProperties.getInitDataBaseFileName();
             File file = new ClassPathResource(fileName).getFile();
             String[] queries = sqlFileReaderService.getQueryFromFile(file);
             connection.setAutoCommit(false);
@@ -53,14 +52,17 @@ public class ConnectionServiceImpl implements ConnectionService {
                 dataBaseInitRepository.init(connection, queries);
                 connection.commit();
             } catch (SQLException e) {
-                logger.error(e.getMessage());
+                connection.rollback();
+                logger.error(e.getMessage(), e);
                 throw new ServiceException(e.getMessage(), e);
             }
         } catch (SQLException e) {
             String message = "Connection to database can't be established";
             throw new ServiceException(message, e);
         } catch (IOException e) {
-            e.printStackTrace();
+            String message = "Can't get file from this path: " + fileName;
+            logger.error(message, e);
+            throw new RuntimeException(message, e);
         }
         logger.debug("initialization tables in the database was successful ");
     }
